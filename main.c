@@ -28,32 +28,65 @@ void MenuRemover(Server* server);
 void MenuSairdaConta(Server* server);
 void Pesquisar(Server* server);
 void IniciaFavoritas(Playlist* playlist);
+void FinalizaPrograma(Server*server);
+void RecuperaSistema(Server* server);
+
+
 
 
 int main(int argc, char** argv) {
     Server* server;
-    Album* teste;Usuario*usuario;
+    Album* album;Usuario*usuario;Midia*midia;
     int valido=1; int escolha;int nova;
-    Playlist*favoritas;
+    Playlist*favoritas;int quant=0;Playlist*play;Playlist*v;
+    FILE* arquivo;int reinicia=0;
+    server=CriaServer();   
+    
+    PrencheIDLogado(server,0);  
+    PrencheQuantUsuarioscriados(server,0);  
+    PrencheQuantdeAlbum(server,0);
+    
+    arquivo=fopen("album1.txt","r");
+        if(!arquivo){
+        printf("Problema na abertura do arquivo");
+        return 1;
+    }
+   album=LeituraAlbumArquivo(arquivo);
+   quant=RecuperaQuantAlbum(server);
+   AdicionaAlbumServer(server,album,quant); 
+   fclose(arquivo);
+    
+   arquivo=fopen("album2.txt","r");
+    if(!arquivo){
+        printf("Problema na abertura do arquivo");
+        return 1;
+    }
+   album=LeituraAlbumArquivo(arquivo);
+   quant=RecuperaQuantAlbum(server);
+   AdicionaAlbumServer(server,album,quant); 
+   fclose(arquivo);
+    
+   
+   
+    printf("Deseja Recuperar servidor anterior:(1-sim/2-não)\n");
+    scanf("%d",&reinicia);
+    
+    if(reinicia==1){
+        RecuperaSistema(server);
+    }
+    else{
+        printf("O ID desse usuario Administrador sera [0]\n\n");
+        usuario=CriaUsuario();      //alocando uma auxiliar usuario
+        EntradaUsuario(usuario);    //criando o usuario 
+        PrencheUsuarionoServer(server,usuario,0);   //prenchendo o usuario no servidor
+        ImprimiLogindoServer(server,0); //imprimindo o login do usuario criado
     
     
-    server=CriaServer();    //alocando o  ponteiro server 
-    
-    printf("O ID desse usuario Administrador sera [0]\n\n");//Criando usuario inicial Adm
-    PrencheIDLogado(server,0);  //definindo o id do usuario 0 como logado
-    PrencheQuantUsuarioscriados(server,0);  //iniciando o servidor com 0 usuarios criados
-    PrencheQuantdeAlbum(server,0);          //iniciando servidor com 0 albuns criados
-    
-    usuario=CriaUsuario();      //alocando uma auxiliar usuario
-    EntradaUsuario(usuario);    //criando o usuario 
-    PrencheUsuarionoServer(server,usuario,0);   //prenchendo o usuario no servidor
-    ImprimiLogindoServer(server,0); //imprimindo o login do usuario criado
-    
-    favoritas=CriaPlaylist();       //alocando palylist favorita do usuario logado
-    IniciaFavoritas(favoritas);     //inicializando a playlist favoritas     
-    PrenchePlaylistFavoritosUsuarioNoServer(server,favoritas,0);//preenchendo a playlist favorita do usuairo logado no server
-    
-    
+        favoritas=CriaPlaylist();       //alocando palylist favorita do usuario logado
+        IniciaFavoritas(favoritas);     //inicializando a playlist favoritas     
+        PrenchePlaylistFavoritosUsuarioNoServer(server,favoritas,0);//preenchendo a playlist favorita do usuairo logado no server
+    }
+   
     
     
     while(valido){
@@ -79,6 +112,7 @@ int main(int argc, char** argv) {
             Pesquisar(server);
         }  
         else if(escolha==9){    //opção de sair do programa
+          FinalizaPrograma(server);
             Sair(); //mensagem de despedida
             exit(1);
         }
@@ -89,6 +123,95 @@ int main(int argc, char** argv) {
 }
 
 
+void RecuperaSistema(Server* server){
+    FILE*arquivo;
+    Usuario*usuario;int users=0;
+    printf("Recupera quantos usuarios do servidor:?");
+    scanf("%d",&users);
+    
+    
+    arquivo=fopen("usuario1.txt","r");
+    if(!arquivo){
+        printf("Problema na abertura do arquivo");
+    }
+    usuario=CriaUsuario();
+    PrencheUsuarionoServer(server,usuario,0);
+    LeUsuarioArquivoNoServer(server,0,arquivo);  
+    fclose(arquivo);
+
+    
+    if(users>1){
+    arquivo=fopen("usuario2.txt","r");
+        if(!arquivo){
+            printf("Problema na abertura do arquivo");
+        }
+        usuario=CriaUsuario();
+        PrencheUsuarionoServer(server,usuario,1);
+        LeUsuarioArquivoNoServer(server,1,arquivo);  
+        fclose(arquivo);
+    PrencheQuantUsuarioscriados(server,1);
+    }
+    
+    if(users>2){
+       arquivo=fopen("usuario3.txt","r");
+        if(!arquivo){
+            printf("Problema na abertura do arquivo");
+        }
+        usuario=CriaUsuario();
+        PrencheUsuarionoServer(server,usuario,2);
+        LeUsuarioArquivoNoServer(server,2,arquivo);  
+        fclose(arquivo);
+    PrencheQuantUsuarioscriados(server,2);
+    }
+    
+}
+
+void FinalizaPrograma(Server*server){       //função recebe um ponteiro server
+    FILE*arquivo;int quant=0;               //vai gerar um arquivo vom todas informações colocadas no programa
+                                                    
+    quant=RecuperaQuantDeUsuariosCriados(server);//verifica a quatidade de usuarios para gerar os arquivos
+
+    arquivo=fopen("usuario1.txt","w");
+    if(!arquivo){
+        printf("Problema na abertura do arquivo");
+      
+        }
+        ImprimiUsuarioServerArquivo(server,0,arquivo); 
+        fclose(arquivo);
+    
+    
+    
+    if(quant>0){
+        arquivo=fopen("usuario2.txt","w");
+        if(!arquivo){
+            printf("Problema na abertura do arquivo");
+            
+        }
+        ImprimiUsuarioServerArquivo(server,1,arquivo); 
+        fclose(arquivo);
+    }
+
+    if(quant==2){
+        arquivo=fopen("usuario3.txt","w");
+        if(!arquivo){
+            printf("Problema na abertura do arquivo");
+
+        }
+        ImprimiUsuarioServerArquivo(server,2,arquivo); 
+        fclose(arquivo);
+    }
+
+        
+        
+        arquivo=fopen("Todosalbuns.txt","w");
+        if(!arquivo){
+            printf("Problema na abertura do arquivo");
+
+        }
+        ImprimiTodosalbunsAlbumdoServerarquivo(server,arquivo);
+        fclose(arquivo);
+
+}
 void EntradaCriaMidia(Midia* midia){
    //essa função vai receber um ponteiro midia
    //o objetivo dessa função é controlar o tipo de midia que sera criada
@@ -321,7 +444,9 @@ void EntradaPlaylist(Playlist* playlist){
     
     PrenchePlaylistQuantmidias(playlist,0); //chama a função de atribuir quantidade de midia para dentro de playlist
     AlocaMidiaNAPlaylist(playlist);//chama a função para alocar as midias dentro da playlist
-    
+    PrenchePlaylistestasendoseguida(playlist,0,2);
+    PrenchePlaylistestasendoseguida(playlist,0,1);
+    PrenchePlaylistestasendoseguida(playlist,0,0);   
     
     
 }
@@ -343,7 +468,7 @@ void EntradaUsuario(Usuario* usuario){
     PrencheUsuarioSenha(usuario,senha);//chama a função de atribuir senha para dentro do usuario
     
     PrencheQuantPlayusuario(usuario,0);//chama a função de atribuir quantidade de play para dentro do usuario
-    PrencheQuantPlaySeguindousuario(usuario,0);//chama a função de atribuir qunatidae de paly seguindo para dentro do usuario
+
 
 }
 void  menucriar(Server* server){
@@ -488,18 +613,8 @@ void MenuLer(Server* server){
     
         else if(escolha==5){    //imprimir playlists seguidas pelo usuario
             id=RecuperaIdLogada(server);
-            quantseguidas=RecuperaQuantSeguindoDoUsuariodentroServer(server,id);//recupera quantidade de playlist seguidas
-            if(quantseguidas!=0){  
-            //Essa parte esta dando problema na hora de imprimir, na depuração mostra que esta tudo certo, mais não imprime as playlists seguidas 
- 
-                //IMprimiNomedasPlaysqueUsuarioEstaSeguindo(server,id);
-                //printf("Qual Deseja Ler:");
-                //scanf("%d",escolhaplay);
-                //IMprimiPlayQueUsuarioEstaSeguindoNoServer(server,id,escolhaplay);
-            }
-            else{   //se não esta seguindo nenhuma playlist
-                printf("Nao está seguindo nenhuma Playlist");
-            }    
+            ImprimiasplaylistsSeguidasdoUsuarioDentroServer(server,id);
+                      
         }
     }
 }
@@ -792,8 +907,8 @@ void Pesquisar(Server* server){
                 scanf("%d",&escolhaseguir);
              
                 if(escolhaseguir==1){   
-                quantsegue=RecuperaQuantSeguindoDoUsuariodentroServer(server,id);  //recupera a quantidade de playlists que o usuario logado esta seguindo
-                CopiaPlaylistdeOutroUsernoServer(server,idescolha,id,quantsegue,escolhaplay); //Função que ira copiar a playlist escolhida para as playlists seguidas do usuario logado                  
+                PrenchePlaylistestasendoseguidaDouserdoServer(server,idescolha,escolhaplay,1,id);            
+                               
                 }
             
             }
@@ -818,3 +933,5 @@ void IniciaFavoritas(Playlist* playlist){
     PrenchePlaylistQuantmidias(playlist,0);//usa a função para prencher a quantidade de midias
     AlocaMidiaNAPlaylist(playlist);        //Chama a função para alocar as midias na playlist     
 }
+
+

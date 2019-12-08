@@ -10,7 +10,8 @@ struct playlist{    //Struct Playlist
     char *donoPlaylist[2];//vetor de ponteiros char para o dono da playlist//MAX:2
     int quantDeDonos;     //int quant de donos para ter controle sobre donos da playlist(ler e imprimir)  
     int quantDeMidias;    //int quantidade de midias para ter controle sobre midias(ler e imprimir)  
-    Midia *midias[50];    //Um vetor de ponteiro Midia que são as midias da playlist  
+    Midia *midias[50];
+    int seguida[3];      //Um vetor de ponteiro Midia que são as midias da playlist  
 };
 
 
@@ -52,6 +53,7 @@ void PrenchePlaylistPrivacidade(Playlist* playlist,int entrada){
     playlist->privacidade=entrada;
 }
 
+
 void AlocaMidiaNAPlaylist(Playlist* playlist){  //Essa função recebe um ponteiro playlist
     for(int roda=0;roda<50;roda++){             //dentro do ponteiro aloca as 50 midias que possuem na playlist    
         playlist->midias[roda]=CriaMidia();     //função cria midia esta alocando a midia
@@ -77,6 +79,7 @@ void ImprimePlaylist(Playlist* playlist){   //Função recebe um ponteiro playli
     for(int roda=0;roda < playlist->quantDeMidias; roda++){
         printf("------[%02d]-------\n",roda+1);  //printa um ID na midia em ordem crescente de 1 a 50   
         ImprimeMidia(playlist->midias[roda]);   //Chama a função IMprimiMidia para as midias de acordo com a quantidade
+        printf("\n");
         }
 }
 
@@ -156,3 +159,77 @@ void CopiaPlaylist(Playlist*original,Playlist* copia){
     }
 
 }
+
+void PrenchePlaylistestasendoseguida(Playlist* playlist,int entrada,int idquemsegue){
+    playlist->seguida[idquemsegue]=entrada;
+}
+
+
+void ImprimiasplaylistsSeguidas(Playlist* playlist,int ID){
+    if(playlist->seguida[ID]==1){
+        ImprimePlaylist(playlist);
+        printf("\n");
+    }
+}
+
+//////////////////////////////////////////////////////////////
+
+void ImprimePlaylistArquivo(Playlist* playlist,FILE*arquivo){   
+    fprintf(arquivo,playlist->nomePlaylist,"%s");
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,"%d",playlist->privacidade);
+    fprintf(arquivo,"\n");
+    
+    fprintf(arquivo,"%d",playlist->quantDeDonos);
+    fprintf(arquivo,"\n");
+    
+    for(int i=0 ;i<playlist->quantDeDonos; i++){        
+        fprintf(arquivo,playlist->donoPlaylist[i],"%s");
+        fprintf(arquivo,"\n");
+        }
+    
+    fprintf(arquivo,"%d",playlist->quantDeMidias);
+    fprintf(arquivo,"\n");
+    for(int roda=0;roda < playlist->quantDeMidias; roda++){
+        ImprimeMidiaArquivo(playlist->midias[roda],arquivo);
+        fprintf(arquivo,"\n");
+        }
+}
+
+
+void ImprimiasplaylistsSeguidasArquivo(Playlist* playlist,int IDdoseguidor,FILE*arquivo){
+    if(playlist->seguida[IDdoseguidor]==1){
+        ImprimePlaylistArquivo(playlist,arquivo);
+        printf("\n");
+    }
+}
+
+void AlocaTudoPlaylist(Playlist*nova){
+    nova->donoPlaylist[0]=(char*)malloc(50);
+    nova->donoPlaylist[1]=(char*)malloc(50);
+    nova->nomePlaylist=(char*)malloc(50);
+    
+}
+
+void LerPlaylistArquivo(Playlist* playlist,FILE*arquivo){   
+    AlocaTudoPlaylist(playlist);
+    fscanf(arquivo,"%[^\n]s",playlist->nomePlaylist);
+    fscanf(arquivo,"\n");
+    fscanf(arquivo,"%d",&playlist->privacidade);
+    fscanf(arquivo,"\n");
+    fscanf(arquivo,"%d",&playlist->quantDeDonos);
+    fscanf(arquivo,"\n");
+    for(int i=0 ;i<playlist->quantDeDonos; i++){        
+        fscanf(arquivo,"%[^\n]s",playlist->donoPlaylist[i]);
+        fscanf(arquivo,"\n");
+        }
+    
+    fscanf(arquivo,"%d",&playlist->quantDeMidias);
+    for(int roda=0;roda < playlist->quantDeMidias; roda++){
+            playlist->midias[roda]=AlocaTudoMidia();
+            playlist->midias[roda]=LeituraMidiarquivo(arquivo);
+            fscanf(arquivo,"\n");
+        }
+}
+
+

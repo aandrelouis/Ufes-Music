@@ -25,6 +25,9 @@ void PesquisaacomCompositorMidiaNoAlbum(Album* album,char* entrada);
 void PesquisaacomGeneroNoAlbum(Album* album,char* entrada);
 void PesquisaacomGravadoraNoAlbum(Album* album,char* entrada);
 void PesquisaOAlbumPeloNome(Album* album,char* entrada);
+Album* AlocaTudoAlbum();
+Album* LeituraAlbumArquivo(FILE *arquivo);
+void ImprimeAlbumArquivo(Album* album,FILE*arquivo);
 #endif 
 
 

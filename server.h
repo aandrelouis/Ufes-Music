@@ -49,10 +49,11 @@ void PrenchePlaylistFavoritosUsuarioNoServer(Server* server,Playlist* playlist,i
 void ApagaMidiaDaPlaylistFavoritosdoUserdentroServer(Server* server,int IDuser,int identificador);
 void AdicionaMidiaNAPlayFavoritauserDoSERVE(Server* server,int IDuser,int IDdoalbum,int IDdamidia);
 void ImprimiPlayFavoritadouserNoServer(Server* server,int ID);
-int RecuperaQuantSeguindoDoUsuariodentroServer(Server* server,int ID);
-void IMprimiPlayQueUsuarioEstaSeguindoNoServer(Server* server,int IDuser,int IDplay);
-void IMprimiNomedasPlaysqueUsuarioEstaSeguindonoServer(Server* server,int ID);
-void CopiaPlaylistdeOutroUsernoServer(Server*server,int original,int copia,int poscopia,int IDdaplay);
+void ImprimiasplaylistsSeguidasdoUsuarioDentroServer(Server* server,int IDseguidor);
+void PrenchePlaylistestasendoseguidaDouserdoServer(Server* server,int IDdoDono,int IDdaplay,int entrada,int idquemsegue);
+void ImprimiUsuarioServerArquivo(Server*server,int IDuser,FILE*arquivo);
+void LeUsuarioArquivoNoServer(Server* server,int ID,FILE* arquivo);
+void ImprimiTodosalbunsAlbumdoServerarquivo(Server* server,FILE*arquivo);
 #endif 
 
 

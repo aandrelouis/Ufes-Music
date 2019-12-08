@@ -315,7 +315,7 @@ void MostraLoginDeOutrosUsuarioSemIDlogado(Server*server,int IDlogada){
     //vai fazer uma repetição com a quantidade de usuarios criados
     //o i que for diferente da int IDlogada vai chamar a função de imprimir aquele usuario
     //imprimindo o I e o login daquele usuario identificado pelo int I
-    for(int i=0;i<server->quantusuarioscriados;i++){
+    for(int i=0;i<=server->quantusuarioscriados;i++){
         if(i!=IDlogada){
             printf("[%02d]:",i);
             ImprimiLogin(server->usuario[i]);
@@ -386,39 +386,43 @@ void ApagaMidiaDaPlaylistFavoritosdoUserdentroServer(Server* server,int IDuser,i
     ApagaMidiaDaPlaylistFavoritosdoUser(server->usuario[IDuser],identificador);
 }
 
-int RecuperaQuantSeguindoDoUsuariodentroServer(Server* server,int ID){
-    //Essa função vai receber um ponteiro server e um int iD
-    //vai chamar a função Recupera quant seguindo do usuario
-    //passando como argumento o usuario do vetor de usuarios do servr identrificado pelo int ID
-    //retorna o int que a função anterior retornou
-    int nova=0;
-    nova=RecuperaQuantSeguindoDoUsuario(server->usuario[ID]);
-    return nova;
+
+void PrenchePlaylistestasendoseguidaDouserdoServer(Server* server,int IDdoDono,int IDdaplay,int entrada,int idquemsegue){
+    PrenchePlaylistestasendoseguidaDouser(server->usuario[IDdoDono],IDdaplay,entrada,idquemsegue);
 }
 
-void CopiaPlaylistdeOutroUsernoServer(Server*server,int original,int copia,int poscopia,int IDdaplay){
-    //Essa função recebe um ponteiro server, um int original,um int copia,int poscopia,int IDdapaly
-    //vai chamar a função de copia playlist de outro user Seguindo
-    //passando como argumento um usuario identificado pelo int original
-    //passando outro usuario identificado pelo int copia
-    //passando o int copia e o int IDdaplay
-    //Esa função não retorna nada
-    CopiaplaylistDeOutroUserSeguindo(server->usuario[original],server->usuario[copia],poscopia,IDdaplay);
+void ImprimiasplaylistsSeguidasdoUsuarioDentroServer(Server* server,int IDseguidor){
+    for(int i=0;i<server->quantusuarioscriados;i++){
+        if(i!=IDseguidor){
+            ImprimiasplaylistsSeguidasdoUsuario(server->usuario[i],IDseguidor);
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ImprimiUsuarioServerArquivo(Server*server,int IDuser,FILE*arquivo){
+    ImprimiUsuarioArquivo(server->usuario[IDuser],arquivo);
+    fprintf(arquivo,"Playlists Seguidas\n");    
+     
+    for(int i=0;i<=server->quantusuarioscriados;i++){
+        if(i!=IDuser){
+         ImprimiasplaylistsSeguidasdoUsuarioArquivo(server->usuario[i],IDuser,arquivo);
+        }
+    }
+    
 }
 
 
-void IMprimiNomedasPlaysqueUsuarioEstaSeguindonoServer(Server* server,int ID){
-    //Essa função recebe um ponteiro server e um int ID
-    //Vai chamar a função de imprimir nome das playlists que o usuario está seguindo
-    //passando como argumento o usuario do vetor de usuario identificado pelo int ID
-    IMprimiNomedasPlaysqueUsuarioEstaSeguindo(server->usuario[ID]);
+void LeUsuarioArquivoNoServer(Server* server,int ID,FILE* arquivo){
+    LeUsuarioArquivo(server->usuario[ID],arquivo);
 }
 
 
-void IMprimiPlayQueUsuarioEstaSeguindoNoServer(Server* server,int IDuser,int IDplay){
-    //Essa função recebe um ponteiro server,um int IDdaplay um int IDuser
-    //Vai chamar a função de imprimir playlist que o usuario está seguindo
-    //passando como argumento o usuario do vetor de usuario identificado pelo int IDuser
-    //passando tambem o int IDdaplay
-    IMprimiPlayQueUsuarioEstaSeguindo(server->usuario[IDuser],IDplay);
+
+void ImprimiTodosalbunsAlbumdoServerarquivo(Server* server,FILE*arquivo){
+    for(int i=0;i<server->quantAlbum;i++){
+        ImprimeAlbumArquivo(server->listalbum[i],arquivo);
+    }
+
 }

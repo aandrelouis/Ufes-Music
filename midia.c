@@ -200,10 +200,12 @@ int PesquisaacomNomeArtista(Midia* midia,char* entrada){     //essa função rec
   
 }
 int PesquisaacomNomeCompositor(Midia* midia,char* entrada){ //essa função recebe ponteiro midia e um ponteiro char entrada
+    if(midia->tipo==1){
     for(int i=0;i<midia->qtdCompositores;i++){              //faz uma comparação entre as strings no ponteiro char nomeCompositor e entrada 
         if(strcmp(midia->nomeDoCompositor[i],entrada)==0){  //a comparação é feita com todos os Compositores que possuem na midia
         return 1;                                           //se 1 for igual a função retorna 1        
         }                                                    //se forem diferentes a função retorna zero 
+      }
     }
     return 0;
 }
@@ -213,13 +215,17 @@ int PesquisaacomGenero(Midia* midia,char* entrada){
     //faz uma comparação entre as strings no ponteiro char genero e entrada
     //se for igual a função retorna 1   
     //se forem diferentes a função retorna zero
-    
-    if(strcmp(midia->genero,entrada)==0){
-        return 1;
+    if(midia->tipo==1){
+        if(strcmp(midia->genero,entrada)==0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
     else{
         return 0;
-  }
+    }
 }
 
 int PesquisaacomGravadora(Midia* midia,char* entrada){
@@ -263,6 +269,164 @@ void CopiaMidia(Midia*original,Midia*copia){    //essa função recebe dois pont
         for(int j=0;j<original->qtdCompositores;j++){
             strcpy(copia->nomeDoCompositor[j],original->nomeDoCompositor[j]);
         }    
+    }
+    
+}
+Midia* AlocaTudoMidia(){
+  Midia* midia;  
+  midia=(Midia*)malloc(sizeof(Midia));
+  midia->nomeDaMidia=(char*)malloc(50);
+  midia->genero=(char*)malloc(50);
+  midia->gravadora=(char*)malloc(50);
+  midia->artista[0]=(char*)malloc(50);
+  midia->artista[1]=(char*)malloc(50);  
+  midia->artista[2]=(char*)malloc(50);
+  midia->nomeDoCompositor[0]=(char*)malloc(50);
+  midia->nomeDoCompositor[1]=(char*)malloc(50); 
+  midia->nomeDoCompositor[2]=(char*)malloc(50); 
+  return midia;
+} 
+
+
+
+
+Midia* LeituraMidiarquivo(FILE *arquivo){   
+    Midia* midia;
+    midia=AlocaTudoMidia();
+    
+        fscanf(arquivo,"%d",&midia->tipo);
+        fscanf(arquivo,"\n");
+        
+        
+        fscanf(arquivo,"%[^\n]s",midia->nomeDaMidia);
+        fscanf(arquivo,"\n");
+        
+        fscanf(arquivo,"%d",&midia->qtdArtistas);
+        fscanf(arquivo,"\n");
+        
+        for(int i=0;i<midia->qtdArtistas;i++){
+            fscanf(arquivo,"%[^\n]s",midia->artista[i]);
+            fscanf(arquivo,"\n");
+        }
+        fscanf(arquivo,"%[^\n]s",midia->gravadora);
+        fscanf(arquivo,"\n");
+        
+         
+        fscanf(arquivo,"%f",&midia->duracao);
+        fscanf(arquivo,"\n");
+        
+        
+        if(midia->tipo==1){
+            fscanf(arquivo,"%d",&midia->qtdCompositores);
+            fscanf(arquivo,"\n");
+        
+            for(int i=0;i<midia->qtdCompositores;i++){
+                fscanf(arquivo,"%[^\n]s",midia->nomeDoCompositor[i]);
+                fscanf(arquivo,"\n");
+            }
+        
+            fscanf(arquivo,"%[^\n]s",midia->genero);
+            fscanf(arquivo,"\n");
+        }
+        return midia;
+}
+
+
+
+void ImprimeMusicaArquivo(Midia* midia,FILE*arquivo){  
+    fprintf(arquivo,"%d",midia->tipo);
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,midia->nomeDaMidia,"%s");
+    fprintf(arquivo,"\n");
+    
+    
+    fprintf(arquivo,"%d",midia->qtdArtistas);
+    fprintf(arquivo,"\n");
+    for(int j=0;j<midia->qtdArtistas;j++){      
+        fprintf(arquivo,midia->artista[j],"%s"); 
+        fprintf(arquivo,"\n");
+    }
+    
+    fprintf(arquivo,midia->gravadora,"%s");
+    fprintf(arquivo,"\n");
+    
+    fprintf(arquivo,"%.2f",midia->duracao);        
+    fprintf(arquivo,"\n");
+    
+    
+    fprintf(arquivo,"%d",midia->qtdCompositores);
+    fprintf(arquivo,"\n");
+    
+    for(int i=0;i<midia->qtdCompositores;i++){      
+        fprintf(arquivo,midia->nomeDoCompositor[i],"%s");
+        fprintf(arquivo,"\n");
+    }
+
+    fprintf(arquivo,midia->genero,"%s"); 
+    fprintf(arquivo,"\n");
+
+
+}
+
+void ImprimePodcastArquivo(Midia* midia,FILE*arquivo){  
+    
+    fprintf(arquivo,"%d",midia->tipo);
+    fprintf(arquivo,"\n");
+    
+    fprintf(arquivo,midia->nomeDaMidia,"%s");
+    fprintf(arquivo,"\n");
+    
+    
+    fprintf(arquivo,"%d",midia->qtdArtistas);
+    fprintf(arquivo,"\n");
+    for(int j=0;j<midia->qtdArtistas;j++){      
+        fprintf(arquivo,midia->artista[j],"%s"); 
+        fprintf(arquivo,"\n");
+    }
+    
+    fprintf(arquivo,midia->gravadora,"%s");
+    fprintf(arquivo,"\n");
+    
+    fprintf(arquivo,"%.2f",midia->duracao);        
+    fprintf(arquivo,"\n");
+    
+}
+
+void ImprimeVideoArquivo(Midia* midia,FILE*arquivo){ 
+    
+    fprintf(arquivo,"%d",midia->tipo);
+    fprintf(arquivo,"\n");
+    
+    fprintf(arquivo,midia->nomeDaMidia,"%s");
+    fprintf(arquivo,"\n");
+    
+    
+    fprintf(arquivo,"%d",midia->qtdArtistas);
+    fprintf(arquivo,"\n");
+    for(int j=0;j<midia->qtdArtistas;j++){      
+        fprintf(arquivo,midia->artista[j],"%s"); 
+        fprintf(arquivo,"\n");
+    }
+    
+    fprintf(arquivo,midia->gravadora,"%s");
+    fprintf(arquivo,"\n");
+    
+    fprintf(arquivo,"%.2f",midia->duracao);        
+    fprintf(arquivo,"\n");
+    
+}
+
+
+
+void ImprimeMidiaArquivo(Midia* midia,FILE*arquivo){ 
+    if(midia->tipo == 1){       
+        ImprimeMusicaArquivo(midia,arquivo);
+    }                             
+    else if(midia->tipo == 2){      
+       ImprimePodcastArquivo(midia,arquivo);
+    }
+    else if(midia->tipo == 3){
+       ImprimeVideoArquivo(midia,arquivo);
     }
     
 }

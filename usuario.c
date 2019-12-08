@@ -10,9 +10,7 @@ struct usuario{ //Struct Usuario
     char* senha;//ponteiro char para a senha
     Playlist* listaplay[20];//vetor de ponteiro playlist com tamamho 20--indicano playlists do usuario
     Playlist* favoritas;    //ponteiro de playlist --indicando playlist das midias favoritas
-    Playlist* seguindo[5];  //vetor de ponteiro playlis com tamanho 5-indicando as playlist seguidas
     int quantPlay;          //int quantidade de playlist usada para ter controle das playlist
-    int quantseguindo;      //int de quantseguindo para ter controle sobre playlists seguindo
 };
 
 
@@ -47,14 +45,6 @@ void PrencheQuantPlayusuario(Usuario* usuario,int entrada){
     //não ira retornar nada por estarmos tratando de ponteiro
     usuario->quantPlay=entrada;
 }
-void PrencheQuantPlaySeguindousuario(Usuario* usuario,int entrada){
-    //Essa função ira receber um ponteiro usuario e um int entrada
-    //ira atribuir o int entrada para a quantidade de playlist que aquele usuario segue para dentro da struct usuario
-    //não ira retornar nada por estarmos tratando de ponteiro
-    usuario->quantseguindo=entrada;
-}
-
-
 
 void ApagaPLaylistdousuario(Usuario *usuario, int identificador){
     //Essa função ira receber um ponteiro usuario e um int ID
@@ -230,36 +220,57 @@ void ApagaMidiaDaPlaylistFavoritosdoUser(Usuario* usuario,int identificador){
     ApagaMidiaDaPlaylist(usuario->favoritas,identificador);
 }
 
-int RecuperaQuantSeguindoDoUsuario(Usuario* usuario){
-    //Essa função recebe um ponteiro usuario
-    //Ela ira retornar o int que diz quantas playlists aquele usuario esta seguindo 
-    return usuario->quantseguindo;
-}
-
-void CopiaplaylistDeOutroUserSeguindo(Usuario* original,Usuario* copia,int poscopia,int IDdaplay){
-   //Essa função recebe dois ponteiros usuario(original e copia),um int poscopiae um int IDdaplay
-   //Essa função ira copiar uma playlist de um usuario(original) para as palylists seguidas de doutro usuario(copia)   
-   
-   copia->seguindo[poscopia]=CriaPlaylist(); //Aloca a playlist do usuario copia na posicão int poscopia
-   CopiaPlaylist(original->listaplay[IDdaplay],copia->seguindo[poscopia]);  //chama a função que vai copiar a playlist original para a playlist copia
-                                                                            //ambas identificadas pelo IDdaplay e poscopia dentro do usuario
-   ImprimePlaylist(copia->seguindo[poscopia]);  //Imprimi a playlist que foi adicionada as playlists seguidas do usuario naquela posição
-   copia->quantseguindo++;  //atualiza a quantidade de playlists que o usuario esta seguindo, e defini a posição que vai entrar a proxima playlist
+void PrenchePlaylistestasendoseguidaDouser(Usuario* usuario,int IDdaplay,int entrada,int idquemsegue){
+        PrenchePlaylistestasendoseguida(usuario->listaplay[IDdaplay],entrada,idquemsegue);  
 }
 
 
-void IMprimiNomedasPlaysqueUsuarioEstaSeguindo(Usuario* usuario){
-    //Essa função recebe um ponteiro usuario
-    //entao pecorre todas as playlists seguidas do usuario 
-    //e chama a função de imprimir nome para imprimir os nomes das playlists com ID
-    for(int i=0;i<usuario->quantseguindo;i++){
-       ImprimenomePlaylistcomid(usuario->seguindo[i],i);
+void ImprimiasplaylistsSeguidasdoUsuario(Usuario* usuario,int IDseguidor){
+    for(int i=0;i<usuario->quantPlay;i++){
+        ImprimiasplaylistsSeguidas(usuario->listaplay[i],IDseguidor);
     }
 }
 
-void IMprimiPlayQueUsuarioEstaSeguindo(Usuario* usuario,int IDplay){
-    //Essa função recebe um ponteiro usuario e um int IDdaplay
-    //e chama a função de imprimir playlist
-    //passando a palylist seguindo e a IDdaplay como posição dela no vetor
-    ImprimePlaylist(usuario->seguindo[IDplay]);
+void ImprimiUsuarioArquivo(Usuario* usuario,FILE* arquivo){
+    fprintf(arquivo,usuario->login,"%s");
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,usuario->senha,"%s");
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,"%d",usuario->quantPlay);
+    fprintf(arquivo,"\n");
+    
+    for(int i=0;i<usuario->quantPlay;i++){
+        ImprimePlaylistArquivo(usuario->listaplay[i],arquivo);
+    }
+    ImprimePlaylistArquivo(usuario->favoritas,arquivo);
+}
+
+void LeUsuarioArquivo(Usuario* usuario,FILE* arquivo){
+    usuario->login=(char*)malloc(50);
+    usuario->senha=(char*)malloc(50);
+    usuario->nome=(char*)malloc(50);
+    
+    fscanf(arquivo,"%[^\n]s",usuario->login);
+    fscanf(arquivo,"\n");
+    fscanf(arquivo,"%[^\n]s",usuario->senha);
+    fscanf(arquivo,"\n");
+    
+    fscanf(arquivo,"%d",&usuario->quantPlay);
+    fscanf(arquivo,"\n");
+    for(int i=0;i<usuario->quantPlay;i++){
+        usuario->listaplay[i]=CriaPlaylist();    
+        LerPlaylistArquivo(usuario->listaplay[i],arquivo);
+        fscanf(arquivo,"\n");
+    }
+    
+    usuario->favoritas=CriaPlaylist();
+    LerPlaylistArquivo(usuario->favoritas,arquivo);
+    
+}
+
+
+void ImprimiasplaylistsSeguidasdoUsuarioArquivo(Usuario* usuario,int IDseguidor,FILE*arquivo){
+    for(int i=0;i<usuario->quantPlay;i++){
+        ImprimiasplaylistsSeguidasArquivo(usuario->listaplay[i],IDseguidor,arquivo);
+    }
 }
