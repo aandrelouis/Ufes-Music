@@ -270,6 +270,14 @@ void LeUsuarioArquivoNoServer(Server* server,int ID,FILE* arquivo);
 //vai chamar a função de imprimir album para todos albuns do server
 //imprimindo os albuns no arquivo
 void ImprimiTodosalbunsAlbumdoServerarquivo(Server* server,FILE*arquivo);
+
+
+
+//Essa função vai receber um ponteiro server e um FILE arquivo
+//vai ler a quantidade de albuns do arquivo então atraves de uma repetição
+//vai adicionando os albuns lidos no server 
+//não retorna nada
+void LerTodosalbunsAlbumdoServerarquivo(Server* server,FILE*arquivo);
 #endif 
 
 

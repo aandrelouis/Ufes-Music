@@ -41,33 +41,20 @@ int main(int argc, char** argv) {
     Playlist*favoritas;int quant=0;Playlist*play;Playlist*v;
     FILE* arquivo;int reinicia=0;
     server=CriaServer();   
-    
     PrencheIDLogado(server,0);  
     PrencheQuantUsuarioscriados(server,0);  
     PrencheQuantdeAlbum(server,0);
     
-    arquivo=fopen("album1.txt","r");
+    
+    
+    arquivo=fopen("albuns.txt","r");
         if(!arquivo){
             printf("Problema na abertura do arquivo");
         return 1;
         }
-        album=LeituraAlbumArquivo(arquivo);
-        quant=RecuperaQuantAlbum(server);
-        AdicionaAlbumServer(server,album,quant); 
-        fclose(arquivo);
-    
-    arquivo=fopen("album2.txt","r");
-        if(!arquivo){
-            printf("Problema na abertura do arquivo");
-            return 1;
-        }
-        album=LeituraAlbumArquivo(arquivo);
-        quant=RecuperaQuantAlbum(server);
-        AdicionaAlbumServer(server,album,quant); 
-        fclose(arquivo);
-    
-   
-   
+    LerTodosalbunsAlbumdoServerarquivo(server,arquivo);
+    fclose(arquivo);
+
     printf("Deseja Recuperar servidor anterior:(1-sim/2-não)\n");//chamar a função de recuperar o servidor antigo
     scanf("%d",&reinicia);
     
@@ -208,7 +195,7 @@ void FinalizaPrograma(Server*server){       //função recebe um ponteiro server
 
         
         
-        arquivo=fopen("Todosalbuns.txt","w");
+        arquivo=fopen("albuns.txt","w");
         if(!arquivo){
             printf("Problema na abertura do arquivo");
 

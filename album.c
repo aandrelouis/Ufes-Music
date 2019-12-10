@@ -95,7 +95,7 @@ void ImprimeAlbum(Album *album){    //Essa função vai receber um ponteiro albu
    }
 
     for(int roda=0;roda<album->qtdMidias;roda++){   
-        printf("[%02d]\n",roda+1);    //vai imprimir um ID em ordem cresente oara as midias
+        printf("[%02d]\n",roda);    //vai imprimir um ID em ordem cresente oara as midias
         ImprimeMidia(album->midia[roda]);   //vai chamar a função de imprimir midia para imprimir as midias do album de acordo com a quantidade
         printf("\n");
     }
@@ -287,13 +287,20 @@ void ImprimeAlbumArquivo(Album* album,FILE*arquivo){
     fprintf(arquivo,"\n");
     fprintf(arquivo,album->artista,"%s");
     fprintf(arquivo,"\n");
-  
+    fprintf(arquivo,album->genero,"%s");
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,"%d",album->qtdCompositores);
+    fprintf(arquivo,"\n");
+    
     for(int i=0 ;i<album->qtdCompositores; i++){        
         fprintf(arquivo,album->compositores[i],"%s");
         fprintf(arquivo,"\n");
         }
     
 
+    fprintf(arquivo,"%d",album->qtdMidias);
+    fprintf(arquivo,"\n");
+    
     for(int roda=0;roda<album->qtdMidias; roda++){
         ImprimeMidiaArquivo(album->midia[roda],arquivo);
         fprintf(arquivo,"\n");

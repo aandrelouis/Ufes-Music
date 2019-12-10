@@ -420,8 +420,20 @@ void LeUsuarioArquivoNoServer(Server* server,int ID,FILE* arquivo){
 
 
 void ImprimiTodosalbunsAlbumdoServerarquivo(Server* server,FILE*arquivo){
+    fprintf(arquivo,"%d",server->quantAlbum);
+    fprintf(arquivo,"\n");
     for(int i=0;i<server->quantAlbum;i++){
         ImprimeAlbumArquivo(server->listalbum[i],arquivo);
     }
+
+}
+
+void LerTodosalbunsAlbumdoServerarquivo(Server* server,FILE*arquivo){
+    fscanf(arquivo,"%d",&server->quantAlbum);
+    fscanf(arquivo,"\n");
+    for(int i=0;i<server->quantAlbum;i++){
+        server->listalbum[i]=CriaAlbum();
+        server->listalbum[i]=LeituraAlbumArquivo(arquivo);
+        }
 
 }

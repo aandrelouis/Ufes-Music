@@ -77,7 +77,7 @@ void ImprimePlaylist(Playlist* playlist){   //Função recebe um ponteiro playli
         printf("Dono [%d]: [%s]\n",i+1,playlist->donoPlaylist[i]);//imprimi o nome dos donos de acordo com a quantidade
         }
     for(int roda=0;roda < playlist->quantDeMidias; roda++){
-        printf("------[%02d]-------\n",roda+1);  //printa um ID na midia em ordem crescente de 1 a 50   
+        printf("------[%02d]-------\n",roda);  //printa um ID na midia em ordem crescente de 1 a 50   
         ImprimeMidia(playlist->midias[roda]);   //Chama a função IMprimiMidia para as midias de acordo com a quantidade
         printf("\n");
         }
