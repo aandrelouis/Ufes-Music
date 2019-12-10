@@ -399,7 +399,6 @@ void ImprimiasplaylistsSeguidasdoUsuarioDentroServer(Server* server,int IDseguid
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
 
 void ImprimiUsuarioServerArquivo(Server*server,int IDuser,FILE*arquivo){
     ImprimiUsuarioArquivo(server->usuario[IDuser],arquivo);

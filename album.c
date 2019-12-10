@@ -42,7 +42,7 @@ void PrencheAlbumArtista(Album* album,char*entrada){
 }
 void PrencheAlbumGenero(Album* album,char*entrada){
     //Essa função recebe um ponteiro album e um ponteiro char entrada
-    //ela vai atribuir o char entrada para o  artista dentro do ponteiro album
+    //ela vai atribuir o char entrada para o  genero dentro do ponteiro album
     //Não vai retornar nada por tratarmos de ponteiro
     album->genero=entrada;
 }

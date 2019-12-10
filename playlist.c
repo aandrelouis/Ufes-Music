@@ -172,7 +172,6 @@ void ImprimiasplaylistsSeguidas(Playlist* playlist,int ID){
     }
 }
 
-//////////////////////////////////////////////////////////////
 
 void ImprimePlaylistArquivo(Playlist* playlist,FILE*arquivo){   
     fprintf(arquivo,playlist->nomePlaylist,"%s");

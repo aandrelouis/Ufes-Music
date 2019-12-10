@@ -48,33 +48,33 @@ int main(int argc, char** argv) {
     
     arquivo=fopen("album1.txt","r");
         if(!arquivo){
-        printf("Problema na abertura do arquivo");
+            printf("Problema na abertura do arquivo");
         return 1;
-    }
-   album=LeituraAlbumArquivo(arquivo);
-   quant=RecuperaQuantAlbum(server);
-   AdicionaAlbumServer(server,album,quant); 
-   fclose(arquivo);
+        }
+        album=LeituraAlbumArquivo(arquivo);
+        quant=RecuperaQuantAlbum(server);
+        AdicionaAlbumServer(server,album,quant); 
+        fclose(arquivo);
     
-   arquivo=fopen("album2.txt","r");
-    if(!arquivo){
-        printf("Problema na abertura do arquivo");
-        return 1;
-    }
-   album=LeituraAlbumArquivo(arquivo);
-   quant=RecuperaQuantAlbum(server);
-   AdicionaAlbumServer(server,album,quant); 
-   fclose(arquivo);
+    arquivo=fopen("album2.txt","r");
+        if(!arquivo){
+            printf("Problema na abertura do arquivo");
+            return 1;
+        }
+        album=LeituraAlbumArquivo(arquivo);
+        quant=RecuperaQuantAlbum(server);
+        AdicionaAlbumServer(server,album,quant); 
+        fclose(arquivo);
     
    
    
-    printf("Deseja Recuperar servidor anterior:(1-sim/2-não)\n");
+    printf("Deseja Recuperar servidor anterior:(1-sim/2-não)\n");//chamar a função de recuperar o servidor antigo
     scanf("%d",&reinicia);
     
     if(reinicia==1){
         RecuperaSistema(server);
     }
-    else{
+    else{   //começãr um novo servidor---limpar os arquivos
         printf("O ID desse usuario Administrador sera [0]\n\n");
         usuario=CriaUsuario();      //alocando uma auxiliar usuario
         EntradaUsuario(usuario);    //criando o usuario 
@@ -124,6 +124,11 @@ int main(int argc, char** argv) {
 
 
 void RecuperaSistema(Server* server){
+    //Essa função vai receber um ponteiro server
+    //o objetivo dessa função é recuperar o servidor antigo do programa
+    //fazendo a leitura dos arquivos e chamando funções para prencher os dados no servidor
+    //não retorna nada
+    
     FILE*arquivo;
     Usuario*usuario;int users=0;
     printf("Recupera quantos usuarios do servidor:?");
@@ -167,8 +172,8 @@ void RecuperaSistema(Server* server){
 }
 
 void FinalizaPrograma(Server*server){       //função recebe um ponteiro server
-    FILE*arquivo;int quant=0;               //vai gerar um arquivo vom todas informações colocadas no programa
-                                                    
+    FILE*arquivo;int quant=0;               //vai gerar um arquivo com todas informações colocadas no programa
+                                             //para depois as informações poderem ser recuperadas por outra função       
     quant=RecuperaQuantDeUsuariosCriados(server);//verifica a quatidade de usuarios para gerar os arquivos
 
     arquivo=fopen("usuario1.txt","w");
@@ -906,7 +911,7 @@ void Pesquisar(Server* server){
                 printf("Deseja Seguir Essa Playlist(1-sim/2-não):\n");
                 scanf("%d",&escolhaseguir);
              
-                if(escolhaseguir==1){   
+                if(escolhaseguir==1){   //entrana no if e ira chamar de prencher a playlist como seguida pelo usuairo logado
                 PrenchePlaylistestasendoseguidaDouserdoServer(server,idescolha,escolhaplay,1,id);            
                                
                 }
